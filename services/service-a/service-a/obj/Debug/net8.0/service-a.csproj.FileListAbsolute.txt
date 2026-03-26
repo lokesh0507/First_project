@@ -31,3 +31,4 @@ C:\Users\ilokesh\Documents\yp-deps-poc\services\service-a\service-a\obj\Debug\ne
 C:\Users\ilokesh\Documents\yp-deps-poc\services\service-a\service-a\obj\Debug\net8.0\service-a.pdb
 C:\Users\ilokesh\Documents\yp-deps-poc\services\service-a\service-a\obj\Debug\net8.0\service-a.genruntimeconfig.cache
 C:\Users\ilokesh\Documents\yp-deps-poc\services\service-a\service-a\obj\Debug\net8.0\ref\service-a.dll
+C:\Users\ilokesh\Documents\yp-deps-poc\services\service-a\service-a\obj\Debug\net8.0\service-a.sourcelink.json
