@@ -11,5 +11,10 @@ services:
     language: dotnet
     base_urls:
       - http://service-b
+
+  - name: service-c
+    path: ./services/service-c 
+
+  
  
 external_endpoints: []

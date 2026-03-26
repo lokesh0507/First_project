@@ -1,25 +1,27 @@
-from urllib.parse import urlparse
- 
+import re
+
+# ✅ Port → service mapping
+SERVICE_PORTS = {
+    5000: "service-a",
+    5125: "service-b",
+    5200: "service-c"
+}
+
 def resolve(url: str, services: list):
     """
-    Convert a URL like:
-        http://service-b/items
-    into a service name like:
-        service-b
- 
-    Uses base_urls from deps.config.yaml.
+    Resolve http://localhost:<port>/... to service name using SERVICE_PORTS.
     """
- 
-    # Extract host from URL
-    parsed = urlparse(url)
-    host = parsed.netloc.lower() if parsed.netloc else url.lower()
- 
-    # Match host with a known service base_url
-    for svc in services:
-        for base in svc.get("base_urls", []):
-            if host in base:
-                return svc["name"]  # return service name
- 
-    # If no match → return host (external)
-    return host
- 
+
+    # Extract port number from URL
+    match = re.search(r":(\d+)", url)
+    if not match:
+        return url  # fallback for external URLs
+
+    port = int(match.group(1))
+
+    # ✅ Map port → service name
+    if port in SERVICE_PORTS:
+        return SERVICE_PORTS[port]
+
+    # fallback: return the raw URL
+    return url
