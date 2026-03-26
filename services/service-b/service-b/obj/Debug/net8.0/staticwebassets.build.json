@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "wODMpecT+vsszTRW0/GXGkFyjtbeDi6b8KdKJrB0dsM=",
+  "Source": "service-b",
+  "BasePath": "_content/service-b",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
