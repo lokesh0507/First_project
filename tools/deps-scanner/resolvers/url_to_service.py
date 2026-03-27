@@ -4,7 +4,8 @@ import re
 SERVICE_PORTS = {
     5000: "service-a",
     5125: "service-b",
-    5200: "service-c"
+    5200: "service-c",
+    5300: "service-d"
 }
 
 def resolve(url: str, services: list):
