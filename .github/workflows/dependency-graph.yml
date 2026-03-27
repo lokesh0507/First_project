@@ -1,0 +1,40 @@
+name: Generate Dependency Graph
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  generate-graph:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Take the code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Step 3: Install required Python library
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      # Step 4: Run your dependency scanner
+      - name: Run dependency scanner
+        run: |
+          python tools/deps-scanner/scan.py
+
+      # Step 5: Save the generated graph
+      - name: Upload dependency graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-graph
+          path: output/deps.mmd
