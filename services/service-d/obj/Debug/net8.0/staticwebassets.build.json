@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "Etq8lM2kEi82A0zuGj4y5DrySOf+iPlhjZ9c3WE1uO4=",
+  "Source": "service-d",
+  "BasePath": "_content/service-d",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

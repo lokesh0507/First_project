@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d\\service-d.csproj": {}
+    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d\\service-d.csproj": {
+    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d\\service-d.csproj",
+        "projectUniqueName": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d.csproj",
         "projectName": "service-d",
-        "projectPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d\\service-d.csproj",
+        "projectPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d.csproj",
         "packagesPath": "C:\\Users\\ilokesh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d\\obj\\",
+        "outputPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ilokesh\\AppData\\Roaming\\NuGet\\NuGet.Config"
