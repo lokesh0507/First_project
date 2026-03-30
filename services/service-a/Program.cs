@@ -24,12 +24,12 @@ app.MapGet("/call-b", async (IHttpClientFactory factory) =>
 
 
 
-// app.MapGet("/call-e", async (IHttpClientFactory factory) =>
-// {
-//     var client = factory.CreateClient();
+app.MapGet("/call-e", async (IHttpClientFactory factory) =>
+{
+    var client = factory.CreateClient();
 
-//     var response = await client.GetAsync("http://localhost:5010/health");
-//     return Results.Ok(await response.Content.ReadAsStringAsync());
-// });
+    var response = await client.GetAsync("http://localhost:5292/health");
+    return Results.Ok(await response.Content.ReadAsStringAsync());
+});
 
 app.Run();
