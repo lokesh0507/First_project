@@ -1,28 +1,27 @@
 import re
 
-# ✅ Port → service mapping
+# ✅ SINGLE SOURCE OF TRUTH
+# Port number → Service name
 SERVICE_PORTS = {
     5000: "service-a",
     5125: "service-b",
     5200: "service-c",
-    5300: "service-d"
+    5300: "service-d",
+    5010: "service-e",
 }
 
 def resolve(url: str, services: list):
     """
-    Resolve http://localhost:<port>/... to service name using SERVICE_PORTS.
+    Resolve dependency ONLY using localhost:PORT.
+    - No config
+    - No service-name host
+    - No guessing
     """
 
     # Extract port number from URL
     match = re.search(r":(\d+)", url)
     if not match:
-        return url  # fallback for external URLs
+        return "UNKNOWN"
 
     port = int(match.group(1))
-
-    # ✅ Map port → service name
-    if port in SERVICE_PORTS:
-        return SERVICE_PORTS[port]
-
-    # fallback: return the raw URL
-    return url
+    return SERVICE_PORTS.get(port, "UNKNOWN")
