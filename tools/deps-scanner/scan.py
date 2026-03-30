@@ -16,7 +16,7 @@ def main():
 
     services = []
 
-    # ✅ Auto discover microservice folders
+    # ✅ Auto-discover service folders
     for svc in services_root.iterdir():
         if svc.is_dir():
             services.append({
@@ -38,18 +38,18 @@ def main():
 
         print(f"  ➜ Scanning {svc_name}...")
 
-        # Detect REST dependencies
         rest_edges = find_http_edges(svc_name, svc_path)
 
         for e in rest_edges:
             dst_service = resolve(e["dst_url"], services)
 
-            all_edges.append({
-                "src": svc_name,
-                "dst": dst_service,
-                "method": e["method"],
-                "type": "REST"
-            })
+            if dst_service != "UNKNOWN":
+                all_edges.append({
+                    "src": svc_name,
+                    "dst": dst_service,
+                    "method": e["method"],
+                    "type": "REST"
+                })
 
     print("\n🛠 Generating Mermaid diagram...")
 
