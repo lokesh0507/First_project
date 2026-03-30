@@ -22,14 +22,14 @@ app.MapGet("/call-b", async (IHttpClientFactory factory) =>
     return Results.Ok($"Service-A called Service-B. Response: {body}");
 });
 
-app.MapGet("/call-a", async (IHttpClientFactory factory) =>
+
+
+app.MapGet("/call-e", async (IHttpClientFactory factory) =>
 {
     var client = factory.CreateClient();
-    var response = await client.GetAsync("http://localhost:5000/call-a");
-    var body = await response.Content.ReadAsStringAsync();
 
-    return Results.Ok($"Service-D called Service-A → {body}");
+    var response = await client.GetAsync("http://localhost:5010/health");
+    return Results.Ok(await response.Content.ReadAsStringAsync());
 });
-
 
 app.Run();
