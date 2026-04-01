@@ -23,6 +23,17 @@ app.MapGet("/call-b", async (IHttpClientFactory factory) =>
 });
 
 
+app.MapGet("/call-service-c", async (IHttpClientFactory factory) =>
+{
+    var client = factory.CreateClient();
+    var response = await client.GetAsync("http://localhost:5200/items");
+    return Results.Ok(await response.Content.ReadAsStringAsync());
+});
+
+
+
+
+
 
 app.MapGet("/call-e", async (IHttpClientFactory factory) =>
 {
