@@ -1,8 +1,3 @@
-
-
-
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -30,6 +25,8 @@ app.MapGet("/call-service-a", async (IHttpClientFactory factory) =>
 
     return Results.Ok($"Service C called Service A. Response: {body}");
 });
+
+
 
 // ✅ Service C → POST data to Service A
 app.MapPost("/post-to-a", async (IHttpClientFactory factory) =>

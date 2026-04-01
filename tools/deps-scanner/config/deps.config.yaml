@@ -13,7 +13,22 @@ services:
       - http://service-b
 
   - name: service-c
-    path: ./services/service-c 
+    path: ./services/service-c
+    language: dotnet
+    base_urls:
+      - http://service-c 
+
+  - name: service-d
+    path: ./services/service-d
+    language: dotnet
+    base_urls:
+      - http://service-d
+
+  - name: service-e
+    path: ./services/service-e
+    language: dotnet
+    base_urls:
+    - http://service-e
 
   
  
