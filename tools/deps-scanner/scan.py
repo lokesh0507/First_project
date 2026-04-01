@@ -64,6 +64,23 @@ def main():
     print("✅ Dependency graph generated successfully!")
     print(f"➡️  Output file: {output_file}")
 
+    # Generate interactive HTML
+    html_template_path = pathlib.Path("tools/deps-scanner/templates/graph.html")
+    html_output_path = pathlib.Path("output/deps.html")
+
+    html_template = html_template_path.read_text(encoding="utf-8")
+
+    
+    # ✅ Strip markdown fences for HTML rendering
+    clean_mermaid = mermaid_text.replace("```mermaid", "").replace("```", "").strip()
+
+
+    html_content = html_template.replace("{{GRAPH}}", clean_mermaid)
+
+    html_output_path.write_text(html_content, encoding="utf-8")
+
+    print(f"➡️ Interactive graph generated: {html_output_path}")
+
 
 if __name__ == "__main__":
     main()
