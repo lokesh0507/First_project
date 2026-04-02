@@ -26,6 +26,49 @@ app.MapGet("/call-service-a", async (IHttpClientFactory factory) =>
     return Results.Ok($"Service C called Service A. Response: {body}");
 });
 
+// ✅ POST endpoint to receive data from Service-B
+app.MapPost("/receive-from-b", (ServiceBPayload data) =>
+{
+    return Results.Ok(new
+    {
+        Message = "Service C received data from Service B",
+        Data = data
+    });
+});
+
+// ✅ NEW: POST endpoint to receive data
+// app.MapPost("/receive-data", (ServiceDPayload data) =>
+// {
+//     return Results.Ok(new
+//     {
+//         Message = "Service C received POST data",
+//         Received = data
+//     });
+// });
+
+
+// ✅ Service-B → POST data to Service-C
+// app.MapPost("/post-to-service-c", async (IHttpClientFactory factory) =>
+// {
+//     var client = factory.CreateClient();
+
+//     var payload = new
+//     {
+//         Name = "Item from Service B",
+//         Quantity = 25
+
+// };
+
+//     var response = await client.PostAsJsonAsync(
+//         "http://localhost:5200/receive-from-b",
+//         payload
+//     );
+
+//     var result = await response.Content.ReadAsStringAsync();
+//     return Results.Ok($"Service B posted data to Service C → {result}");
+// });
+
+
 
 
 // ✅ Service C → POST data to Service A

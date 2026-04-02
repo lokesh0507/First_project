@@ -16,5 +16,29 @@ app.MapGet("/call-a", async (IHttpClientFactory factory) =>
     return Results.Ok(await response.Content.ReadAsStringAsync());
 });
 
+// ✅ Replaces POST to service-c
+app.MapPost("/publish-order", async () =>
+{
+    using var producer =
+        new ProducerBuilder<Null, string>(producerConfig).Build();
+
+    var orderEvent = new
+    {
+        OrderId = Guid.NewGuid().ToString(),
+        CreatedBy = "service-b",
+        CreatedAt = DateTime.UtcNow
+    };
+
+    var message = new Message<Null, string>
+    {
+        Value = JsonSerializer.Serialize(orderEvent)
+    };
+
+    await producer.ProduceAsync("order-created", message);
+
+    return Results.Ok("✅ Order event published to Kafka");
+});
+
+
  
 app.Run();
