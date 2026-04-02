@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +29,7 @@ app.MapGet("/call-service-a", async (IHttpClientFactory factory) =>
 
 
 
+
 // ✅ Service C → POST data to Service A
 app.MapPost("/post-to-a", async (IHttpClientFactory factory) =>
 {
@@ -44,5 +46,36 @@ app.MapPost("/post-to-a", async (IHttpClientFactory factory) =>
 
     return Results.Ok($"Service C posted data to A. Response: {body}");
 });
+
+
+// ------------------- ✅ KAFKA CONSUMER (NEW) -------------------
+
+var consumerConfig = new ConsumerConfig
+{
+    BootstrapServers = "localhost:9092",
+    GroupId = "service-c-group",
+    AutoOffsetReset = AutoOffsetReset.Earliest
+};
+
+var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
+
+Task.Run(() =>
+{
+    consumer.Subscribe("orders-topic");
+
+    while (true)
+    {
+        try
+        {
+            var cr = consumer.Consume();
+            Console.WriteLine($"[Service-C] Consumed message: {cr.Message.Value}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Kafka consume error: {ex.Message}");
+        }
+    }
+});
+
 
 app.Run();

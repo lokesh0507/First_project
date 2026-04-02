@@ -1,11 +1,23 @@
 {
   "Version": 1,
-  "Hash": "tPx9aKLdpHCnKF74FcDsnY9qVL6ueysrpPhByd26rJ4=",
+  "Hash": "itAtoq/iA2RAatnmguGHdH8Hc/onDJxi6Uul2S7+GMg=",
   "Source": "service-c",
   "BasePath": "_content/service-c",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\tbs\\Documents\\First_project\\services\\service-a\\service-a.csproj",
+      "Version": 2,
+      "Source": "service-a",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
   "DiscoveryPatterns": [],
   "Assets": []
 }

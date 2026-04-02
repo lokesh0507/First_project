@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-c\\service-c\\service-c.csproj": {}
+    "C:\\Users\\tbs\\Documents\\First_project\\services\\service-c\\service-c.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-c\\service-c\\service-c.csproj": {
+    "C:\\Users\\tbs\\Documents\\First_project\\services\\service-a\\service-a.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-c\\service-c\\service-c.csproj",
-        "projectName": "service-c",
-        "projectPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-c\\service-c\\service-c.csproj",
-        "packagesPath": "C:\\Users\\ilokesh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-c\\service-c\\obj\\",
+        "projectUniqueName": "C:\\Users\\tbs\\Documents\\First_project\\services\\service-a\\service-a.csproj",
+        "projectName": "service-a",
+        "projectPath": "C:\\Users\\tbs\\Documents\\First_project\\services\\service-a\\service-a.csproj",
+        "packagesPath": "C:\\Users\\tbs\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\tbs\\Documents\\First_project\\services\\service-a\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ilokesh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\tbs\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,6 +43,89 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Confluent.Kafka": {
+              "target": "Package",
+              "version": "[2.13.2, )"
+            },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[8.0.25, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\tbs\\Documents\\First_project\\services\\service-c\\service-c.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\tbs\\Documents\\First_project\\services\\service-c\\service-c.csproj",
+        "projectName": "service-c",
+        "projectPath": "C:\\Users\\tbs\\Documents\\First_project\\services\\service-c\\service-c.csproj",
+        "packagesPath": "C:\\Users\\tbs\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\tbs\\Documents\\First_project\\services\\service-c\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\tbs\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\tbs\\Documents\\First_project\\services\\service-a\\service-a.csproj": {
+                "projectPath": "C:\\Users\\tbs\\Documents\\First_project\\services\\service-a\\service-a.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Confluent.Kafka": {
+              "target": "Package",
+              "version": "[2.13.2, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[10.1.7, )"
@@ -67,7 +150,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.419/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.416/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
