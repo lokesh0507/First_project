@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "SH85pajtsfQ=",
+  "dgSpecHash": "qLbCHMjjwGk=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-d\\service-d.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-d\\service-d.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ilokesh\\.nuget\\packages\\confluent.kafka\\2.14.0\\confluent.kafka.2.14.0.nupkg.sha512",
+    "C:\\Users\\ilokesh\\.nuget\\packages\\librdkafka.redist\\2.14.0\\librdkafka.redist.2.14.0.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "VmKjAdZi2so=",
+  "dgSpecHash": "OZmxsBiPGD8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-b\\service-b\\service-b.csproj",
+  "projectFilePath": "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-b\\service-b.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\ilokesh\\.nuget\\packages\\confluent.kafka\\2.14.0\\confluent.kafka.2.14.0.nupkg.sha512",
+    "C:\\Users\\ilokesh\\.nuget\\packages\\librdkafka.redist\\2.14.0\\librdkafka.redist.2.14.0.nupkg.sha512",
     "C:\\Users\\ilokesh\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.25\\microsoft.aspnetcore.openapi.8.0.25.nupkg.sha512",
     "C:\\Users\\ilokesh\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\ilokesh\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",

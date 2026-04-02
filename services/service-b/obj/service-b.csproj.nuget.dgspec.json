@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-b\\service-b\\service-b.csproj": {}
+    "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-b\\service-b.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-b\\service-b\\service-b.csproj": {
+    "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-b\\service-b.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-b\\service-b\\service-b.csproj",
+        "projectUniqueName": "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-b\\service-b.csproj",
         "projectName": "service-b",
-        "projectPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-b\\service-b\\service-b.csproj",
+        "projectPath": "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-b\\service-b.csproj",
         "packagesPath": "C:\\Users\\ilokesh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-b\\service-b\\obj\\",
+        "outputPath": "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-b\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ilokesh\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,6 +43,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Confluent.Kafka": {
+              "target": "Package",
+              "version": "[2.14.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.25, )"
