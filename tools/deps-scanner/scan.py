@@ -7,7 +7,7 @@ from emitters.mermaid_emitter import to_mermaid
 
 
 
-# ✅ Kafka regex patterns 
+#  Kafka regex patterns 
 
 # Kafka Producer: ProduceAsync("topic-name")
 KAFKA_PRODUCER_RE = re.compile(
@@ -34,28 +34,28 @@ def find_kafka_edges(service_name: str, root_path: pathlib.Path):
         except Exception:
             continue
 
-        # ✅ Kafka Producer (service -> topic)
+        #  Kafka Producer (service -> topic)
         for match in KAFKA_PRODUCER_RE.finditer(content):
             edges.append({
                 "src": service_name,
                 "dst": match.group("topic"),
-                "type": "KAFKA_PUBLISH"
+                "type": "KAFKA_PRODUCER"
             })
 
-        # ✅ Kafka Consumer (topic -> service)
+        #  Kafka Consumer (topic -> service)
         for match in KAFKA_CONSUMER_RE.finditer(content):
             edges.append({
                 "src": match.group("topic"),
                 "dst": service_name,
-                "type": "KAFKA_CONSUME"
+                "type": "KAFKA_CONSUMER"
             })
 
     return edges
 
 
-# ======================================================
-# ✅ Service discovery (your original logic)
-# ======================================================
+
+#  Service discovery (your original logic)
+
 
 def discover_services(root: pathlib.Path):
     """
@@ -84,9 +84,9 @@ def discover_services(root: pathlib.Path):
     return services
 
 
-# ======================================================
-# ✅ Main scanner
-# ======================================================
+
+#  Main scanner
+
 
 def main():
     print("📌 Auto-detecting services from /services directory...")
@@ -113,9 +113,9 @@ def main():
 
         print(f"  ➜ Scanning {svc_name}...")
 
-        # ==================================================
-        # ✅ REST scanning (existing logic)
-        # ==================================================
+        
+        #  REST scanning (existing logic)
+        
         rest_edges = find_http_edges(svc_name, svc_path)
 
         for e in rest_edges:
@@ -129,17 +129,17 @@ def main():
                     "type": "REST"
                 })
 
-        # ==================================================
-        # ✅ Kafka scanning (NEW)
-        # ==================================================
+        
+        # Kafka scanning (NEW)
+        
         kafka_edges = find_kafka_edges(svc_name, svc_path)
 
         for e in kafka_edges:
             all_edges.append(e)
 
-    # ======================================================
-    # ✅ Deduplicate edges
-    # ======================================================
+   
+    #  Deduplicate edges
+   
     seen = set()
     unique_edges = []
 
@@ -164,9 +164,9 @@ def main():
     print("✅ Dependency graph generated successfully!")
     print(f"➡️  Output file: {output_file}")
 
-    # ======================================================
-    # ✅ Interactive HTML output
-    # ======================================================
+    
+    #  Interactive HTML output
+    
     html_template_path = pathlib.Path("tools/deps-scanner/templates/graph.html")
     html_output_path = pathlib.Path("output/deps.html")
 
