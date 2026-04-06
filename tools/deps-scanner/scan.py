@@ -36,16 +36,18 @@ def find_kafka_edges(service_name: str, root_path: pathlib.Path):
 
         #  Kafka Producer (service -> topic)
         for match in KAFKA_PRODUCER_RE.finditer(content):
+            topic = match.group("topic")
             edges.append({
                 "src": service_name,
-                "dst": match.group("topic"),
+                "dst": f"Kafka:{topic}",
                 "type": "KAFKA_PRODUCER"
             })
 
         #  Kafka Consumer (topic -> service)
         for match in KAFKA_CONSUMER_RE.finditer(content):
+            topic = match.group("topic")
             edges.append({
-                "src": match.group("topic"),
+                "src": f"Kafka:{topic}",
                 "dst": service_name,
                 "type": "KAFKA_CONSUMER"
             })
