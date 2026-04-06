@@ -6,9 +6,8 @@ from resolvers.url_to_service import resolve
 from emitters.mermaid_emitter import to_mermaid
 
 
-# ======================================================
-# ✅ Kafka regex patterns (INLINE – no extra files)
-# ======================================================
+
+# ✅ Kafka regex patterns 
 
 # Kafka Producer: ProduceAsync("topic-name")
 KAFKA_PRODUCER_RE = re.compile(
