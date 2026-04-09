@@ -1,12 +1,7 @@
 import re
 import pathlib
+from urllib.parse import urlparse
 
-# Regex to match:
-#   GetAsync("http://service-b/items")
-#   PostAsync("http://service-b/create")
-#   PostAsJsonAsync("http://service-b/create", payload)
-#   PutAsync("http://service-b/update")
-#   DeleteAsync("http://service-b/delete")
 HTTP_CALL_RE = re.compile(
     r'(GetAsync|PostAsync|PostAsJsonAsync|PutAsync|DeleteAsync)\(\s*"(?P<url>http[^"]+)"',
     re.IGNORECASE
@@ -15,16 +10,6 @@ HTTP_CALL_RE = re.compile(
 def find_http_edges(service_name: str, root_path: pathlib.Path):
     """
     Scans .cs files under a service folder and returns a list of REST calls.
-
-    Output format example:
-    [
-       {
-         "src": "service-a",
-         "dst_url": "http://service-b/items",
-         "method": "POST",
-         "type": "REST"
-       }
-    ]
     """
     edges = []
 
@@ -32,23 +17,26 @@ def find_http_edges(service_name: str, root_path: pathlib.Path):
         try:
             content = file.read_text(errors="ignore")
         except Exception:
-            continue  # skip unreadable files
+            continue
 
         for match in HTTP_CALL_RE.finditer(content):
             method_token = match.group(1)
 
-            # Normalize method name
             if method_token.lower().startswith("post"):
                 http_method = "POST"
             else:
                 http_method = method_token.replace("Async", "").upper()
 
-            url = match.group("url")
+            url = match.group("url")              # ✅ "url" WITH QUOTES
+
+            parsed = urlparse(url)                # ✅ Parse the URL
+            endpoint = parsed.path if parsed.path else "/"
 
             edges.append({
                 "src": service_name,
                 "dst_url": url,
                 "method": http_method,
+                "endpoint": endpoint,
                 "type": "REST"
             })
 

@@ -5,7 +5,6 @@ from detectors.http_dotnet import find_http_edges
 from resolvers.url_to_service import resolve
 from emitters.mermaid_emitter import to_mermaid
 
-
 # ✅ Kafka regex patterns
 
 # Kafka Producer: ProduceAsync("topic-name")
@@ -19,8 +18,6 @@ KAFKA_CONSUMER_RE = re.compile(
     r'Subscribe\(\s*"(?P<topic>[^"]+)"',
     re.IGNORECASE
 )
-
-
 # ✅ Kafka dependency detection
 
 def find_kafka_edges(service_name: str, root_path: pathlib.Path):
@@ -124,6 +121,7 @@ def main():
                     "src": svc_name,
                     "dst": dst_service,
                     "method": e["method"],
+                    "endpoint": e["endpoint"], 
                     "type": "REST"
                 })
 
@@ -139,7 +137,8 @@ def main():
         key = (
             e["src"],
             e["dst"],
-            e.get("method", e["type"])
+            e.get("method", e["type"]),
+            e.get("endpoint", "")
         )
         if key not in seen:
             seen.add(key)

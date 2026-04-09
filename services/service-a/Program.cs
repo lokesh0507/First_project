@@ -31,10 +31,6 @@ app.MapGet("/call-service-c", async (IHttpClientFactory factory) =>
 });
 
 
-
-
-
-
 app.MapGet("/call-e", async (IHttpClientFactory factory) =>
 {
     var client = factory.CreateClient();

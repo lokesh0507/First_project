@@ -5,7 +5,6 @@ services:
     base_urls:
       - http://service-a
       
- 
   - name: service-b
     path: ./services/service-b
     language: dotnet
