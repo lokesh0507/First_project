@@ -27,14 +27,12 @@ app.MapGet("/call-service-a", async (IHttpClientFactory factory) =>
 });
 
 // ✅ POST endpoint to receive data from Service-B
-app.MapPost("/receive-from-b", (ServiceBPayload data) =>
+
+app.MapPost("/receive-from-b", (dynamic data) =>
 {
-    return Results.Ok(new
-    {
-        Message = "Service C received data from Service B",
-        Data = data
-    });
+    return Results.Ok(data);
 });
+
 
 // ✅ NEW: POST endpoint to receive data
 // app.MapPost("/receive-data", (ServiceDPayload data) =>
@@ -89,3 +87,4 @@ app.MapPost("/post-to-a", async (IHttpClientFactory factory) =>
 });
 
 app.Run();
+

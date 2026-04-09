@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-a\\service-a.csproj": {}
+    "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-a\\service-a.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-a\\service-a.csproj": {
+    "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-a\\service-a.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-a\\service-a.csproj",
+        "projectUniqueName": "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-a\\service-a.csproj",
         "projectName": "service-a",
-        "projectPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-a\\service-a.csproj",
+        "projectPath": "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-a\\service-a.csproj",
         "packagesPath": "C:\\Users\\ilokesh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ilokesh\\Documents\\yp-deps-poc\\services\\service-a\\obj\\",
+        "outputPath": "C:\\Users\\ilokesh\\Documents\\First_project\\services\\service-a\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ilokesh\\AppData\\Roaming\\NuGet\\NuGet.Config"
