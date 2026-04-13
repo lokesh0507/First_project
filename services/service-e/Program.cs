@@ -9,7 +9,7 @@ app.MapGet("/health", () =>
 app.MapGet("/call-service-c", async (IHttpClientFactory factory) =>
 {
     var client = factory.CreateClient();
-    var response = await client.GetAsync("http://localhost:5200/items");
+    var response = await client.GetAsync("http://localhost:5200/credentials");
     var body = await response.Content.ReadAsStringAsync();
 
     return Results.Ok($"Service-E called Service-C → {body}");

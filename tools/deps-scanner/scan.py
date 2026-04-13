@@ -176,7 +176,7 @@ def main():
     html_content = html_template.replace("{{GRAPH}}", clean_mermaid)
     html_output_path.write_text(html_content, encoding="utf-8")
 
-    print(f"➡️ Interactive graph generated: {html_output_path}")
+    print(f"➡️ Dependency graph generated: {html_output_path}")
 
 
 if __name__ == "__main__":

@@ -1,12 +1,20 @@
 using Confluent.Kafka;
 using System.Text.Json;
-
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 
 // ✅ REQUIRED for HttpClient usage
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // ✅ Kafka producer configuration (MISSING in your code)
 var producerConfig = new ProducerConfig
@@ -25,7 +33,7 @@ app.MapGet("/items", () =>
 app.MapGet("/call-a", async (IHttpClientFactory factory) =>
 {
     var client = factory.CreateClient();
-    var response = await client.GetAsync("http://localhost:5000/health");
+    var response = await client.GetAsync("http://localhost:5000/monitoring");
     return Results.Ok(await response.Content.ReadAsStringAsync());
 });
 
