@@ -4,7 +4,7 @@ import subprocess
 
 import os
  
-config_path = "tools/deps-scanner/deps.config.yaml"
+config_path = "tools/deps-scanner/config/deps.config.yaml"
  
 with open(config_path, "r") as f:
 
