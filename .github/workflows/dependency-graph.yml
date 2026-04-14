@@ -67,7 +67,11 @@ jobs:
 
           name: dependency-graph
 
-          path: output/deps.md
+          
+          path: |
+                  output/deps.md
+                  output/deps.html
+
  
       - name: Commit and push updated graph
 
