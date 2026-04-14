@@ -13,6 +13,9 @@ on:
   repository_dispatch:
 
     types: [dependency-changed]
+  
+permissions:
+  contents: write  
  
 jobs:
 
