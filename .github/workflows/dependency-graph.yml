@@ -1,40 +1,82 @@
 name: Generate Dependency Graph
-
+ 
 on:
+
   push:
+
     branches:
+
       - main
+
   pull_request:
 
+  repository_dispatch:
+
+    types: [dependency-changed]
+ 
 jobs:
+
   generate-graph:
+
     runs-on: ubuntu-latest
-
+ 
     steps:
-      # Step 1: Take the code from GitHub
+
       - name: Checkout code
+
         uses: actions/checkout@v4
-
-      # Step 2: Install Python
+ 
       - name: Setup Python
+
         uses: actions/setup-python@v5
+
         with:
+
           python-version: '3.11'
-
-      # Step 3: Install required Python library
+ 
       - name: Install Python dependencies
+
         run: |
+
           python -m pip install --upgrade pip
+
           pip install pyyaml
+ 
+      # ✅ Pass SCANNER_PAT as environment variable
 
-      # Step 4: Run your dependency scanner
+      - name: Clone external repos
+
+        run: python tools/deps-scanner/clone_repos.py
+
+        env:
+
+          GH_PAT: ${{ secrets.SCANNER_PAT }}
+ 
       - name: Run dependency scanner
-        run: |
-          python tools/deps-scanner/scan.py
 
-      # Step 5: Save the generated graph
+        run: python tools/deps-scanner/scan.py
+ 
       - name: Upload dependency graph
+
         uses: actions/upload-artifact@v4
+
         with:
+
           name: dependency-graph
+
           path: output/deps.md
+ 
+      - name: Commit and push updated graph
+
+        run: |
+
+          git config user.name "github-actions"
+
+          git config user.email "actions@github.com"
+
+          git add output/deps.md
+
+          git commit -m "Auto-update dependency graph" || echo "No changes"
+
+          git push
+ 
