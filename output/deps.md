@@ -12,5 +12,6 @@ graph LR
   service-b -->|GET /monitoring| service-a
   service-b -->|KAFKA_PRODUCER| Kafka:order-created-bd
   Kafka:topic-A -->|KAFKA_CONSUMER| service-g
+  service-f -->|POST /receive-from-g| service-a
   service-f -->|KAFKA_PRODUCER| Kafka:topic-A
 ```
