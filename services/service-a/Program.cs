@@ -1,18 +1,18 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();   
-builder.Services.AddSwaggerGen();             
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();                         
-    app.UseSwaggerUI();                       
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.MapGet("/call-a", () => "Service A is running");   
+app.MapGet("/call-a", () => "Service A is running");
 
 app.MapGet("/call-b", async (IHttpClientFactory factory) =>
 {
@@ -22,7 +22,6 @@ app.MapGet("/call-b", async (IHttpClientFactory factory) =>
     return Results.Ok($"Service-A called Service-B. Response: {body}");
 });
 
-
 app.MapGet("/call-service-c", async (IHttpClientFactory factory) =>
 {
     var client = factory.CreateClient();
@@ -30,35 +29,29 @@ app.MapGet("/call-service-c", async (IHttpClientFactory factory) =>
     return Results.Ok(await response.Content.ReadAsStringAsync());
 });
 
-
 app.MapGet("/call-e", async (IHttpClientFactory factory) =>
 {
     var client = factory.CreateClient();
-
     var response = await client.GetAsync("http://localhost:5292/health");
     return Results.Ok(await response.Content.ReadAsStringAsync());
 });
-
-
-
-
 
 // ✅ API in Service-A that calls Service-G using GET
 app.MapGet("/call-g", async (IHttpClientFactory factory) =>
 {
     var client = factory.CreateClient();
-
     var response = await client.GetFromJsonAsync<object>(
-        "http://localhost:5500/get-from-g"  // Service-G URL
+        "http://localhost:5500/get-from-g"
     );
-
     return Results.Ok(response);
 });
 
-
-
-
-
-
+// ✅ service-a calling service-f's new endpoint
+app.MapGet("/check-f", async (IHttpClientFactory factory) =>
+{
+    var client = factory.CreateClient();
+    var response = await client.GetAsync("http://localhost:5006/status");
+    return Results.Ok(await response.Content.ReadAsStringAsync());
+});
 
 app.Run();
