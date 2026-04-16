@@ -8,6 +8,8 @@ SERVICE_PORTS = {
     5200: "service-c",
     5300: "service-d",
     5292: "service-e",
+    5006: "service-f",
+    5141: "service-g",
 }
 
 def resolve(url: str, services: list):

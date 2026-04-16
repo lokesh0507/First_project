@@ -39,4 +39,12 @@ app.MapGet("/call-e", async (IHttpClientFactory factory) =>
     return Results.Ok(await response.Content.ReadAsStringAsync());
 });
 
+// ✅ service-a calling service-f's new endpoint
+app.MapGet("/check-f", async (IHttpClientFactory factory) =>
+{
+    var client = factory.CreateClient();
+    var response = await client.GetAsync("http://localhost:5006/status");
+    return Results.Ok(await response.Content.ReadAsStringAsync());
+});
+
 app.Run();
