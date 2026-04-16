@@ -41,7 +41,7 @@ app.MapGet("/call-g", async (IHttpClientFactory factory) =>
 {
     var client = factory.CreateClient();
     var response = await client.GetFromJsonAsync<object>(
-        "http://localhost:5500/get-from-g"
+        "http://localhost:5141/get-from-g"
     );
     return Results.Ok(response);
 });
