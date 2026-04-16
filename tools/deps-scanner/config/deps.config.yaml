@@ -30,6 +30,10 @@ services:
     - http://service-e
 
 repositories:
+  - name: Repo-0
+    url: https://github.com/ThejasBS05/Repo-0.git
+    branch: main
+    
   - name: Repo-1
     url: https://github.com/lokesh0507/Repo-1.git
     branch: main
@@ -37,6 +41,8 @@ repositories:
   - name: Repo-2
     url: https://github.com/ThejasBS05/Repo-2.git
     branch: main
+
+  
 
   
  

@@ -42,6 +42,9 @@ graph LR
   service-d -->|GET /addressdetails| service-c
   Kafka:order-created-bd -->|KAFKA_CONSUMER| service-d
   service-e -->|GET /credentials| service-c
+  service-f -->|POST /receive-from-f| service-a
+  service-f -->|KAFKA_PRODUCER| Kafka:topic-A
+  Kafka:topic-A -->|KAFKA_CONSUMER| service-g
   </div>
 
   <p>

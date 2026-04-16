@@ -39,4 +39,26 @@ app.MapGet("/call-e", async (IHttpClientFactory factory) =>
     return Results.Ok(await response.Content.ReadAsStringAsync());
 });
 
+
+
+
+
+// ✅ API in Service-A that calls Service-G using GET
+app.MapGet("/call-g", async (IHttpClientFactory factory) =>
+{
+    var client = factory.CreateClient();
+
+    var response = await client.GetFromJsonAsync<object>(
+        "http://localhost:5500/get-from-g"  // Service-G URL
+    );
+
+    return Results.Ok(response);
+});
+
+
+
+
+
+
+
 app.Run();
