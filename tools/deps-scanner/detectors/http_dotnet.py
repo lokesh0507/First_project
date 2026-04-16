@@ -2,10 +2,41 @@ import re
 import pathlib
 from urllib.parse import urlparse
 
+# ✅ Correct fixed regex
 HTTP_CALL_RE = re.compile(
-    r'(GetAsync|PostAsync|PostAsJsonAsync|PutAsync|DeleteAsync)\(\s*"(?P<url>http[^"]+)"',
+
+    r'(GetAsync'
+
+    r'|PostAsync'
+
+    r'|PostAsJsonAsync'
+
+    r'|PutAsync'
+
+    r'|PutAsJsonAsync'
+
+    r'|DeleteAsync'
+
+    r'|PatchAsync'
+
+    r'|PatchAsJsonAsync'
+
+    r'|GetFromJsonAsync'
+
+    r'|SendAsync'
+
+    r'|GetStringAsync'
+
+    r'|GetByteArrayAsync'
+
+    r'|GetStreamAsync'
+
+    r')\s*(<[^>]+>)?\s*\(\s*"(?P<url>http[^"]+)"',
+
     re.IGNORECASE
+
 )
+ 
 
 def find_http_edges(service_name: str, root_path: pathlib.Path):
     """
