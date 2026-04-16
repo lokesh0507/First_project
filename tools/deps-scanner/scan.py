@@ -10,27 +10,49 @@ from emitters.mermaid_emitter import to_mermaid
  
 # ✅ Kafka regex patterns
  
-# Kafka Producer: ProduceAsync("topic-name")
+# ===========================
+# KAFKA PRODUCER PATTERNS
+# ===========================
 
-KAFKA_PRODUCER_RE = re.compile(
-
+# ProduceAsync("topic-name", message)
+KAFKA_PRODUCER_ASYNC_RE = re.compile(
     r'ProduceAsync\(\s*"(?P<topic>[^"]+)"',
-
     re.IGNORECASE
-
 )
- 
-# Kafka Consumer: Subscribe("topic-name")
 
-KAFKA_CONSUMER_RE = re.compile(
+# Produce("topic-name", message, deliveryHandler)
+KAFKA_PRODUCER_SYNC_RE = re.compile(
+    r'(?<!Async\()Produce\(\s*"(?P<topic>[^"]+)"',
+    re.IGNORECASE
+)
 
+# ===========================
+# KAFKA CONSUMER PATTERNS
+# ===========================
+
+# Subscribe("topic-name")  ← single topic
+KAFKA_CONSUMER_SINGLE_RE = re.compile(
     r'Subscribe\(\s*"(?P<topic>[^"]+)"',
-
     re.IGNORECASE
-
 )
- 
- 
+
+# Subscribe(new List<string> { "topic-1", "topic-2" })  ← multiple topics
+KAFKA_CONSUMER_MULTI_RE = re.compile(
+    r'Subscribe\(\s*new\s+List<string>\s*\{([^}]+)\}',
+    re.IGNORECASE
+)
+
+# Subscribe(new[] { "topic-1", "topic-2" })  ← array style
+KAFKA_CONSUMER_ARRAY_RE = re.compile(
+    r'Subscribe\(\s*new\[\]\s*\{([^}]+)\}',
+    re.IGNORECASE
+)
+
+# Assign(new TopicPartition("topic-name", ...))  ← manual partition
+KAFKA_CONSUMER_ASSIGN_RE = re.compile(
+    r'TopicPartition\(\s*"(?P<topic>[^"]+)"',
+    re.IGNORECASE
+)
 # ✅ Kafka dependency detection
  
 def find_kafka_edges(service_name: str, root_path: pathlib.Path):
@@ -46,47 +68,69 @@ def find_kafka_edges(service_name: str, root_path: pathlib.Path):
     edges = []
  
     for file in root_path.rglob("*.cs"):
-
         try:
-
             content = file.read_text(errors="ignore")
-
         except Exception:
-
             continue
- 
-        # ✅ Kafka Producer: service -> Kafka:topic
 
-        for match in KAFKA_PRODUCER_RE.finditer(content):
-
+        # ✅ Producer: ProduceAsync
+        for match in KAFKA_PRODUCER_ASYNC_RE.finditer(content):
             topic = match.group("topic")
-
             edges.append({
-
                 "src": service_name,
-
                 "dst": f"Kafka:{topic}",
-
                 "type": "KAFKA_PRODUCER"
-
             })
- 
-        # ✅ Kafka Consumer: Kafka:topic -> service
 
-        for match in KAFKA_CONSUMER_RE.finditer(content):
-
+        # ✅ Producer: Produce (sync)
+        for match in KAFKA_PRODUCER_SYNC_RE.finditer(content):
             topic = match.group("topic")
-
             edges.append({
-
-                "src": f"Kafka:{topic}",
-
-                "dst": service_name,
-
-                "type": "KAFKA_CONSUMER"
-
+                "src": service_name,
+                "dst": f"Kafka:{topic}",
+                "type": "KAFKA_PRODUCER"
             })
- 
+
+        # ✅ Consumer: Subscribe single topic
+        for match in KAFKA_CONSUMER_SINGLE_RE.finditer(content):
+            topic = match.group("topic")
+            edges.append({
+                "src": f"Kafka:{topic}",
+                "dst": service_name,
+                "type": "KAFKA_CONSUMER"
+            })
+
+        # ✅ Consumer: Subscribe multiple topics (List)
+        for match in KAFKA_CONSUMER_MULTI_RE.finditer(content):
+            topics_raw = match.group(1)
+            topics = re.findall(r'"([^"]+)"', topics_raw)
+            for topic in topics:
+                edges.append({
+                    "src": f"Kafka:{topic}",
+                    "dst": service_name,
+                    "type": "KAFKA_CONSUMER"
+                })
+
+        # ✅ Consumer: Subscribe multiple topics (Array)
+        for match in KAFKA_CONSUMER_ARRAY_RE.finditer(content):
+            topics_raw = match.group(1)
+            topics = re.findall(r'"([^"]+)"', topics_raw)
+            for topic in topics:
+                edges.append({
+                    "src": f"Kafka:{topic}",
+                    "dst": service_name,
+                    "type": "KAFKA_CONSUMER"
+                })
+
+        # ✅ Consumer: Assign (manual partition)
+        for match in KAFKA_CONSUMER_ASSIGN_RE.finditer(content):
+            topic = match.group("topic")
+            edges.append({
+                "src": f"Kafka:{topic}",
+                "dst": service_name,
+                "type": "KAFKA_CONSUMER"
+            })
+
     return edges
  
  
