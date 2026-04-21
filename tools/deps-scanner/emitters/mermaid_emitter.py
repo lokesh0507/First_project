@@ -52,6 +52,23 @@ def to_mermaid(edges: list[dict], repo_map: dict) -> str:
             f'classDef {repo} fill:{colour},stroke:#333,color:#000'
         )
 
+    # # ✅ NEW: Define all nodes with service name + repo name as label
+    # Collect all unique nodes from edges
+    all_nodes = set()
+    for e in edges:
+        all_nodes.add(e["src"])
+        all_nodes.add(e["dst"])
+
+    lines.append("")  # blank line for readability
+
+    for node in sorted(all_nodes):
+        repo_name = repo_map.get(node, "Unknown")
+        # chr(10) = newline inside Mermaid box label
+        label = f"{node}{chr(10)}({repo_name})"
+        lines.append(f'  {node}["{label}"]')
+
+    lines.append("")  # blank line for readability
+
     # ✅ Draw edges
     for e in edges:
         src = e["src"]
