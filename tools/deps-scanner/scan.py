@@ -119,6 +119,10 @@ def discover_services(root: pathlib.Path):
         if not path.is_dir():
             continue
 
+        # we skipped bin and object folders
+        if "bin" in path.parts or "obj" in path.parts:
+            continue
+
         has_program = (path / "Program.cs").exists()
         has_appsettings = (path / "appsettings.json").exists()
         has_csproj = any(path.glob("*.csproj"))
