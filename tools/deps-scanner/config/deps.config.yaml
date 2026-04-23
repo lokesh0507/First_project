@@ -1,33 +1,33 @@
-services:
-  - name: service-a
-    path: ./services/service-a
-    language: dotnet
-    base_urls:
-      - http://service-a
+# services:
+#   - name: service-a
+#     path: ./services/service-a
+#     language: dotnet
+#     base_urls:
+#       - http://service-a
       
-  - name: service-b
-    path: ./services/service-b
-    language: dotnet
-    base_urls:
-      - http://service-b
+#   - name: service-b
+#     path: ./services/service-b
+#     language: dotnet
+#     base_urls:
+#       - http://service-b
 
-  - name: service-c
-    path: ./services/service-c
-    language: dotnet
-    base_urls:
-      - http://service-c 
+#   - name: service-c
+#     path: ./services/service-c
+#     language: dotnet
+#     base_urls:
+#       - http://service-c 
 
-  - name: service-d
-    path: ./services/service-d
-    language: dotnet
-    base_urls:
-      - http://service-d
+#   - name: service-d
+#     path: ./services/service-d
+#     language: dotnet
+#     base_urls:
+#       - http://service-d
 
-  - name: service-e
-    path: ./services/service-e
-    language: dotnet
-    base_urls:
-    - http://service-e
+#   - name: service-e
+#     path: ./services/service-e
+#     language: dotnet
+#     base_urls:
+#     - http://service-e
 
 repositories:
   - name: Repo-0
@@ -42,8 +42,4 @@ repositories:
     url: https://github.com/lokesh0507/Repo-2.git
     branch: main
 
-  
-
-  
- 
 external_endpoints: []
