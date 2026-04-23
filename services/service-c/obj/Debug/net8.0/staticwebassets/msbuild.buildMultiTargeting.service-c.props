@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\service-c.props" />
-</Project>
