@@ -60,9 +60,6 @@ classDef Repo-2 fill:#90E084,stroke:#333,color:#000
 (Repo-2)"]
 
   service-e -->|GET /credentials| service-c
-  service-c -->|GET /call-a| service-a
-  service-c -->|POST /post-data| service-a
-  service-b -->|GET /monitoring| service-a
   service-d -->|GET /call-a| service-a
   service-d -->|GET /addressdetails| service-c
   service-a -->|GET /items| service-b
@@ -70,12 +67,15 @@ classDef Repo-2 fill:#90E084,stroke:#333,color:#000
   service-a -->|GET /health| service-e
   service-a -->|GET /get-from-g| service-g
   service-a -->|GET /status| service-f
-  service-b -->|KAFKA_PRODUCER| Kafka:order-created-bd
+  service-c -->|GET /call-a| service-a
+  service-c -->|POST /post-data| service-a
+  service-b -->|GET /monitoring| service-a
   Kafka:order-created-bd -->|KAFKA_CONSUMER| service-d
+  service-b -->|KAFKA_PRODUCER| Kafka:order-created-bd
   Kafka:topic-A -->|KAFKA_CONSUMER| service-g
   service-f -->|KAFKA_PRODUCER| Kafka:topic-A
 class Kafka:order-created-bd,Kafka:topic-A Kafka
-class service-e,service-c,service-b,service-d,service-a Repo-0
+class service-e,service-d,service-a,service-c,service-b Repo-0
 class service-f Repo-1
 class service-g Repo-2
   </div>
