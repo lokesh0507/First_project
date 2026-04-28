@@ -1,46 +1,47 @@
 ```mermaid
 graph LR
 classDef Kafka fill:#FFB6C1,stroke:#333,color:#000
-classDef Repo-0 fill:#E0E084,stroke:#333,color:#000
-classDef Repo-1 fill:#84C5E0,stroke:#333,color:#000
-classDef Repo-2 fill:#90E084,stroke:#333,color:#000
+classDef Repo_0 fill:#E0E084,stroke:#333,color:#000
+classDef Repo_1 fill:#84C5E0,stroke:#333,color:#000
+classDef Repo_2 fill:#90E084,stroke:#333,color:#000
 
-  Kafka:order-created-bd["Kafka:order-created-bd
+  Kafka_order_created_bd["Kafka:order-created-bd
 (Kafka)"]
-  Kafka:topic-A["Kafka:topic-A
+  Kafka_topic_A["Kafka:topic-A
 (Kafka)"]
-  service-a["service-a
+  service_a["service-a
 (Repo-0)"]
-  service-b["service-b
+  service_b["service-b
 (Repo-0)"]
-  service-c["service-c
+  service_c["service-c
 (Repo-0)"]
-  service-d["service-d
+  service_d["service-d
 (Repo-0)"]
-  service-e["service-e
+  service_e["service-e
 (Repo-0)"]
-  service-f["service-f
+  service_f["service-f
 (Repo-1)"]
-  service-g["service-g
+  service_g["service-g
 (Repo-2)"]
 
-  service-e -->|GET /credentials| service-c
-  service-d -->|GET /call-a| service-a
-  service-d -->|GET /addressdetails| service-c
-  service-a -->|GET /items| service-b
-  service-a -->|GET /items| service-c
-  service-a -->|GET /health| service-e
-  service-a -->|GET /get-from-g| service-g
-  service-a -->|GET /status| service-f
-  service-c -->|GET /call-a| service-a
-  service-c -->|POST /post-data| service-a
-  service-b -->|GET /monitoring| service-a
-  Kafka:order-created-bd -->|KAFKA_CONSUMER| service-d
-  service-b -->|KAFKA_PRODUCER| Kafka:order-created-bd
-  Kafka:topic-A -->|KAFKA_CONSUMER| service-g
-  service-f -->|KAFKA_PRODUCER| Kafka:topic-A
-class Kafka:order-created-bd,Kafka:topic-A Kafka
-class service-e,service-d,service-a,service-c,service-b Repo-0
-class service-f Repo-1
-class service-g Repo-2
+  service_a -->|GET /items| service_b
+  service_a -->|GET /items| service_c
+  service_a -->|GET /health| service_e
+  service_a -->|GET /get-from-g| service_g
+  service_a -->|GET /status| service_f
+  service_b -->|GET /monitoring| service_a
+  service_c -->|GET /call-a| service_a
+  service_c -->|POST /post-data| service_a
+  service_d -->|GET /call-a| service_a
+  service_d -->|GET /addressdetails| service_c
+  service_e -->|GET /credentials| service_c
+  service_b -->|"KAFKA_PRODUCER<br/>Events Producing:<br/>• OrderCreatedEvent<br/>• PaymentInitiatedEvent"| Kafka_order_created_bd
+  Kafka_order_created_bd -->|"KAFKA_CONSUMER<br/>Events Consuming:<br/>• OrderCreatedEvent"| service_d
+  service_f -->|"KAFKA_PRODUCER<br/>Events Producing:<br/>• TopicAEvent"| Kafka_topic_A
+  Kafka_topic_A -->|"KAFKA_CONSUMER<br/>Events Consuming:<br/>• TopicAEvent"| service_g
+
+class Kafka_order_created_bd,Kafka_topic_A Kafka
+class service_a,service_b,service_c,service_d,service_e Repo_0
+class service_f Repo_1
+class service_g Repo_2
 ```
