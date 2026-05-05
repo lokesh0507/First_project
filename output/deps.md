@@ -36,7 +36,6 @@ classDef Repo_2 fill:#90E084,stroke:#333,color:#000
   service_c -->|POST /post-data| service_a
   service_b -->|GET /monitoring| service_a
   service_b -->|"KAFKA_PRODUCER<br/>Events Producing:<br/>• OrderCreatedEvent<br/>• PaymentInitiatedEvent"| Kafka_order_created_bd
-  Kafka_topic_A -->|"KAFKA_CONSUMER<br/>Events Consuming:<br/>• TopicAEvent"| service_g
   service_f -->|"KAFKA_PRODUCER<br/>Events Producing:<br/>• TopicAEvent"| Kafka_topic_A
 
 class Kafka_order_created_bd,Kafka_topic_A Kafka
