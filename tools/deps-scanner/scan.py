@@ -8,166 +8,138 @@ from emitters.mermaid_emitter import to_mermaid
 
 # ──────────────────────────────────────────────
 # ✅ EVENT CLASS DETECTION PATTERNS — PRODUCER
+# Focused only on SharedKafka / Confluent-style usage
 # ──────────────────────────────────────────────
 
-# Producer: ProduceAsync<OrderCreatedEvent>(...)
+# Matches:
+# ProduceAsync<OrderCreatedEvent>(...)
+# Produce<OrderCreatedEvent>(...)
 EVENT_PRODUCE_GENERIC_RE = re.compile(
-    r'(?:Produce|ProduceAsync|Publish|PublishAsync|Send|SendAsync)'
-    r'\s*<\s*(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s*>',
+    r'(?:Produce|ProduceAsync)\s*<\s*(?P<event>[A-Z][A-Za-z0-9]+Event)\s*>'
 )
 
-# Producer: ProduceAsync("topic", new OrderCreatedEvent(...))
+# Matches:
+# ProduceAsync("topic", new OrderCreatedEvent(...))
+# Produce("topic", new OrderCreatedEvent(...))
 EVENT_PRODUCE_NEW_RE = re.compile(
-    r'(?:Produce|ProduceAsync)\s*\([^)]*new\s+(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s*[({]',
+    r'(?:Produce|ProduceAsync)\s*\([^)]*new\s+(?P<event>[A-Z][A-Za-z0-9]+Event)\s*[({]'
 )
 
-# Producer: new Message<string, OrderCreatedEvent>
+# Matches:
+# new Message<string, OrderCreatedEvent>
 EVENT_MESSAGE_GENERIC_RE = re.compile(
-    r'Message\s*<[^,]+,\s*(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s*>',
+    r'Message\s*<[^,]+,\s*(?P<event>[A-Z][A-Za-z0-9]+Event)\s*>'
 )
 
-# ✅ NEW — Producer: var orderEvent = new OrderCreatedEvent { ... }
-# This matches your EXACT service-b pattern
-EVENT_VAR_NEW_RE = re.compile(    r'var\s+\w+\s*=\s*new\s+(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s*[\r\s]*\{',
+# Matches:
+# var orderEvent = new OrderCreatedEvent { ... }
+# var paymentEvent = new PaymentInitiatedEvent { ... }
+EVENT_VAR_NEW_RE = re.compile(
+    r'var\s+\w+\s*=\s*new\s+(?P<event>[A-Z][A-Za-z0-9]+Event)\s*[\r\s]*\{',
     re.MULTILINE
 )
 
 
 # ──────────────────────────────────────────────
 # ✅ EVENT CLASS DETECTION PATTERNS — CONSUMER
+# Focused only on SharedKafka / Confluent-style usage
 # ──────────────────────────────────────────────
 
-# Consumer: IConsumer<OrderCreatedEvent>
-EVENT_CONSUMER_INTERFACE_RE = re.compile(
-    r'IConsumer\s*<\s*(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s*>',
+# Matches:
+# Subscribe<OrderCreatedEvent>("topic", ...)
+EVENT_SUBSCRIBE_GENERIC_RE = re.compile(
+    r'Subscribe\s*<\s*(?P<event>[A-Z][A-Za-z0-9]+Event)\s*>\s*\(',
+    re.IGNORECASE
 )
 
-# Consumer: IEventHandler<OrderCreatedEvent>
-EVENT_HANDLER_INTERFACE_RE = re.compile(
-    r'IEventHandler\s*<\s*(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s*>',
-)
-
-# Consumer: ConsumeContext<OrderCreatedEvent>
-EVENT_CONSUME_CONTEXT_RE = re.compile(
-    r'ConsumeContext\s*<\s*(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s*>',
-)
-
-# Consumer: Handle(OrderCreatedEvent message)
-EVENT_HANDLE_METHOD_RE = re.compile(
-    r'Handle\s*\(\s*(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s+',
-)
-
-# ✅ NEW — Consumer: JsonSerializer.Deserialize<OrderCreatedEvent>
-# This matches your EXACT service-d pattern
+# Matches:
+# JsonSerializer.Deserialize<OrderCreatedEvent>(...)
+# Useful if some services still use manual consumer logic
 DESERIALIZE_RE = re.compile(
-    r'JsonSerializer\.Deserialize\s*<\s*(?P<event>[A-Z][A-Za-z0-9]+(?:Event|Message|Command|Notification))\s*>',
+    r'JsonSerializer\.Deserialize\s*<\s*(?P<event>[A-Z][A-Za-z0-9]+Event)\s*>'
 )
 
 
 # ──────────────────────────────────────────────
-# ✅ KAFKA TOPIC PATTERNS
+# ✅ KAFKA TOPIC DETECTION PATTERNS
+# Supports SharedKafka wrapper calls
 # ──────────────────────────────────────────────
 
+# Matches:
+# ProduceAsync("order-created-bd", ...)
 KAFKA_PRODUCER_ASYNC_RE = re.compile(
     r'ProduceAsync\(\s*"(?P<topic>[^"]+)"',
     re.IGNORECASE
 )
 
+# Matches:
+# Produce("order-created-bd", ...)
 KAFKA_PRODUCER_SYNC_RE = re.compile(
-    r'(?<!Async\()Produce\(\s*"(?P<topic>[^"]+)"',
+    r'Produce\(\s*"(?P<topic>[^"]+)"',
     re.IGNORECASE
 )
 
+# Matches:
+# Subscribe<OrderCreatedEvent>("order-created-bd", ...)
+# Subscribe("order-created-bd")
 KAFKA_CONSUMER_SINGLE_RE = re.compile(
-    r'Subscribe\(\s*"(?P<topic>[^"]+)"',
-    re.IGNORECASE
-)
-
-KAFKA_CONSUMER_MULTI_RE = re.compile(
-    r'Subscribe\(\s*new\s+List<string>\s*\{([^}]+)\}',
-    re.IGNORECASE
-)
-
-KAFKA_CONSUMER_ARRAY_RE = re.compile(
-    r'Subscribe\(\s*new\[\]\s*\{([^}]+)\}',
-    re.IGNORECASE
-)
-
-KAFKA_CONSUMER_ASSIGN_RE = re.compile(
-    r'TopicPartition\(\s*"(?P<topic>[^"]+)"',
+    r'Subscribe(?:\s*<[^>]+>)?\(\s*"(?P<topic>[^"]+)"',
     re.IGNORECASE
 )
 
 
 # ──────────────────────────────────────────────
-# ✅ EVENT EXTRACTION FUNCTIONS
+# ✅ EXTRACT PRODUCED EVENTS
+# Reads one .cs file and returns event names produced in that file
 # ──────────────────────────────────────────────
 
 def extract_produced_events(content: str) -> set[str]:
-    """
-    Scan file content and return ONLY events being PRODUCED.
-
-    Supports:
-    1. ProduceAsync<OrderCreatedEvent>(...)
-    2. ProduceAsync("topic", new OrderCreatedEvent())
-    3. new Message<string, OrderCreatedEvent>
-    4. var orderEvent = new OrderCreatedEvent { ... }  ← your service-b pattern
-    """
     events = set()
 
-    # Pattern 1 — ProduceAsync<OrderCreatedEvent>
+    # Pattern 1:
+    # ProduceAsync<OrderCreatedEvent>(...)
+    # Produce<OrderCreatedEvent>(...)
     for match in EVENT_PRODUCE_GENERIC_RE.finditer(content):
         events.add(match.group("event"))
 
-    # Pattern 2 — ProduceAsync("topic", new OrderCreatedEvent())
+    # Pattern 2:
+    # ProduceAsync("topic", new OrderCreatedEvent(...))
     for match in EVENT_PRODUCE_NEW_RE.finditer(content):
         events.add(match.group("event"))
 
-    # Pattern 3 — Message<string, OrderCreatedEvent>
+    # Pattern 3:
+    # new Message<string, OrderCreatedEvent>
     for match in EVENT_MESSAGE_GENERIC_RE.finditer(content):
         events.add(match.group("event"))
 
-    # ✅ Pattern 4 — var orderEvent = new OrderCreatedEvent { ... }
-    # Only scan if file has ProduceAsync → avoids false positives
-    if "ProduceAsync" in content or "Publish" in content:
+    # Pattern 4:
+    # var orderEvent = new OrderCreatedEvent { ... }
+    # Only apply if file contains Produce / ProduceAsync
+    if "ProduceAsync" in content or "Produce(" in content:
         for match in EVENT_VAR_NEW_RE.finditer(content):
             events.add(match.group("event"))
 
     return events
 
 
-def extract_consumed_events(content: str) -> set[str]:
-    """
-    Scan file content and return ONLY events being CONSUMED.
+# ──────────────────────────────────────────────
+# ✅ EXTRACT CONSUMED EVENTS
+# Reads one .cs file and returns event names consumed in that file
+# ──────────────────────────────────────────────
 
-    Supports:
-    1. IConsumer<OrderCreatedEvent>
-    2. IEventHandler<OrderCreatedEvent>
-    3. ConsumeContext<OrderCreatedEvent>
-    4. Handle(OrderCreatedEvent message)
-    5. JsonSerializer.Deserialize<OrderCreatedEvent>  ← your service-d pattern
-    """
+def extract_consumed_events(content: str) -> set[str]:
     events = set()
 
-    # Pattern 1 — IConsumer<OrderCreatedEvent>
-    for match in EVENT_CONSUMER_INTERFACE_RE.finditer(content):
-        events.add(match.group("event"))
-
-    # Pattern 2 — IEventHandler<OrderCreatedEvent>
-    for match in EVENT_HANDLER_INTERFACE_RE.finditer(content):
-        events.add(match.group("event"))
-
-    # Pattern 3 — ConsumeContext<OrderCreatedEvent>
-    for match in EVENT_CONSUME_CONTEXT_RE.finditer(content):
-        events.add(match.group("event"))
-
-    # Pattern 4 — Handle(OrderCreatedEvent message)
-    for match in EVENT_HANDLE_METHOD_RE.finditer(content):
-        events.add(match.group("event"))
-
-    # ✅ Pattern 5 — JsonSerializer.Deserialize<OrderCreatedEvent>
-    # Only scan if file has Subscribe → avoids false positives
+    # Pattern 1:
+    # Subscribe<OrderCreatedEvent>("topic", ...)
     if "Subscribe" in content:
+        for match in EVENT_SUBSCRIBE_GENERIC_RE.finditer(content):
+            events.add(match.group("event"))
+
+    # Pattern 2:
+    # JsonSerializer.Deserialize<OrderCreatedEvent>(...)
+    # Useful for older/manual consumers
+    if "Deserialize" in content:
         for match in DESERIALIZE_RE.finditer(content):
             events.add(match.group("event"))
 
@@ -175,7 +147,8 @@ def extract_consumed_events(content: str) -> set[str]:
 
 
 # ──────────────────────────────────────────────
-# ✅ KAFKA DEPENDENCY SCANNER
+# ✅ FIND KAFKA EDGES
+# Builds producer and consumer edges for each service
 # ──────────────────────────────────────────────
 
 def find_kafka_edges(service_name: str, root_path: pathlib.Path):
@@ -187,40 +160,35 @@ def find_kafka_edges(service_name: str, root_path: pathlib.Path):
         except Exception:
             continue
 
-        # ✅ Extract events from this file
+        # Extract event names from the current file
         produced_events = extract_produced_events(content)
         consumed_events = extract_consumed_events(content)
 
-        # # ✅ Debug output
-        # if produced_events:
-        #     print(f"      📤 [{service_name}] {file.name} → produced: {produced_events}")
-        # if consumed_events:
-        #     print(f"      📥 [{service_name}] {file.name} → consumed: {consumed_events}")
-
-        # ✅ Format as comma separated string
+        # Convert set → display label
         producer_event_label = ", ".join(sorted(produced_events)) if produced_events else ""
         consumer_event_label = ", ".join(sorted(consumed_events)) if consumed_events else ""
 
         # ──────────────────────────────────────
         # ✅ PRODUCER edges
+        # Example:
+        # service-b → Kafka:order-created-bd
         # ──────────────────────────────────────
         for match in KAFKA_PRODUCER_ASYNC_RE.finditer(content):
             topic = match.group("topic")
-            edge  = {
-                "src":  service_name,
-                "dst":  f"Kafka:{topic}",
+            edge = {
+                "src": service_name,
+                "dst": f"Kafka:{topic}",
                 "type": "KAFKA_PRODUCER",
             }
             if producer_event_label:
                 edge["events"] = producer_event_label
-            # print(f"      🔗 PRODUCER edge → topic: {topic} | events: {producer_event_label or 'NONE'}")
             edges.append(edge)
 
         for match in KAFKA_PRODUCER_SYNC_RE.finditer(content):
             topic = match.group("topic")
-            edge  = {
-                "src":  service_name,
-                "dst":  f"Kafka:{topic}",
+            edge = {
+                "src": service_name,
+                "dst": f"Kafka:{topic}",
                 "type": "KAFKA_PRODUCER",
             }
             if producer_event_label:
@@ -229,60 +197,29 @@ def find_kafka_edges(service_name: str, root_path: pathlib.Path):
 
         # ──────────────────────────────────────
         # ✅ CONSUMER edges
+        # Example:
+        # Kafka:order-created-bd → service-d
         # ──────────────────────────────────────
         for match in KAFKA_CONSUMER_SINGLE_RE.finditer(content):
             topic = match.group("topic")
-            edge  = {
-                "src":  f"Kafka:{topic}",
-                "dst":  service_name,
+            edge = {
+                "src": f"Kafka:{topic}",
+                "dst": service_name,
                 "type": "KAFKA_CONSUMER",
             }
             if consumer_event_label:
                 edge["events"] = consumer_event_label
-            # print(f"      🔗 CONSUMER edge → topic: {topic} | events: {consumer_event_label or 'NONE'}")
-            edges.append(edge)
-
-        for match in KAFKA_CONSUMER_MULTI_RE.finditer(content):
-            topics = re.findall(r'"([^"]+)"', match.group(1))
-            for topic in topics:
-                edge = {
-                    "src":  f"Kafka:{topic}",
-                    "dst":  service_name,
-                    "type": "KAFKA_CONSUMER",
-                }
-                if consumer_event_label:
-                    edge["events"] = consumer_event_label
-                edges.append(edge)
-
-        for match in KAFKA_CONSUMER_ARRAY_RE.finditer(content):
-            topics = re.findall(r'"([^"]+)"', match.group(1))
-            for topic in topics:
-                edge = {
-                    "src":  f"Kafka:{topic}",
-                    "dst":  service_name,
-                    "type": "KAFKA_CONSUMER",
-                }
-                if consumer_event_label:
-                    edge["events"] = consumer_event_label
-                edges.append(edge)
-
-        for match in KAFKA_CONSUMER_ASSIGN_RE.finditer(content):
-            topic = match.group("topic")
-            edge  = {
-                "src":  f"Kafka:{topic}",
-                "dst":  service_name,
-                "type": "KAFKA_CONSUMER",
-            }
-            if consumer_event_label:
-                edge["events"] = consumer_event_label
-            # print(f"      🔗 CONSUMER edge → topic: {topic} | events: {consumer_event_label or 'NONE'}")
             edges.append(edge)
 
     return edges
 
 
 # ──────────────────────────────────────────────
-# ✅ SERVICE DISCOVERY
+# ✅ DISCOVER SERVICES
+# A folder is treated as a service if it contains:
+# - Program.cs
+# - appsettings.json
+# - or any .csproj file
 # ──────────────────────────────────────────────
 
 def discover_services(root: pathlib.Path):
@@ -312,13 +249,17 @@ def discover_services(root: pathlib.Path):
 
 
 # ──────────────────────────────────────────────
-# ✅ MAIN
+# ✅ MAIN ENTRY
+# - discovers services
+# - scans REST dependencies
+# - scans Kafka dependencies
+# - generates Mermaid + HTML output
 # ──────────────────────────────────────────────
 
 def main():
     all_services = []
 
-    # ✅ Local services
+    # ✅ Scan local services folder
     services_root = pathlib.Path("services")
     if services_root.exists():
         local_services = discover_services(services_root)
@@ -326,7 +267,7 @@ def main():
             svc["repo"] = "First_project"
         all_services.extend(local_services)
 
-    # ✅ External repos
+    # ✅ Scan repos folder
     repos_root = pathlib.Path("repos")
     if repos_root.exists():
         repo_services = discover_services(repos_root)
@@ -342,7 +283,7 @@ def main():
 
     all_edges = []
 
-    # ✅ REST dependencies
+    # ✅ Scan REST dependencies
     print("🔍 Scanning REST dependencies...")
     for svc in all_services:
         print(f"→ Scanning {svc['name']}...")
@@ -351,20 +292,20 @@ def main():
             dst = resolve_by_name(e["dst_url"], all_services)
             if dst != "UNKNOWN" and dst != svc["name"]:
                 all_edges.append({
-                    "src":      svc["name"],
-                    "dst":      dst,
-                    "method":   e["method"],
+                    "src": svc["name"],
+                    "dst": dst,
+                    "method": e["method"],
                     "endpoint": e["endpoint"],
-                    "type":     "REST",
+                    "type": "REST",
                 })
 
-    # ✅ Kafka dependencies
+    # ✅ Scan Kafka dependencies
     print("🔍 Scanning Kafka dependencies...")
     for svc in all_services:
         all_edges.extend(find_kafka_edges(svc["name"], svc["path"]))
 
-    # ✅ Deduplicate edges
-    seen         = set()
+    # ✅ Remove duplicate edges
+    seen = set()
     unique_edges = []
     for e in all_edges:
         key = (
@@ -378,7 +319,7 @@ def main():
             seen.add(key)
             unique_edges.append(e)
 
-    # ✅ Build repo map
+    # ✅ Build repo map for Mermaid labels
     repo_map = {svc["name"]: svc["repo"] for svc in all_services}
     for e in unique_edges:
         if e["src"].startswith("Kafka:"):
@@ -386,7 +327,7 @@ def main():
         if e["dst"].startswith("Kafka:"):
             repo_map[e["dst"]] = "Kafka"
 
-    # ✅ Generate Mermaid
+    # ✅ Generate Mermaid text
     mermaid = to_mermaid(unique_edges, repo_map)
 
     output_dir = pathlib.Path("output")
@@ -396,13 +337,13 @@ def main():
     md_file.write_text(mermaid, encoding="utf-8")
     print(f"✅ Dependency graph generated → {md_file}")
 
-    # ✅ HTML Output
+    # ✅ Generate HTML graph if template exists
     template = pathlib.Path("tools/deps-scanner/templates/graph.html")
     html_out = output_dir / "deps.html"
 
     if template.exists():
         clean = mermaid.replace("```mermaid", "").replace("```", "").strip()
-        html  = template.read_text().replace("{{GRAPH}}", clean)
+        html = template.read_text().replace("{{GRAPH}}", clean)
         html_out.write_text(html, encoding="utf-8")
         print(f"✅ Interactive graph generated → {html_out}")
 
