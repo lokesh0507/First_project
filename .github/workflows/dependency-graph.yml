@@ -2,7 +2,6 @@
 # ──────────────────────────────────────────────
 # Generates dependency graph automatically
 # Runs on push to main
-# Clones iot repos + scans + commits output
 # ──────────────────────────────────────────────
 
 name: Generate Dependency Graph
@@ -23,69 +22,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ✅ Step 1 — Checkout your code
-      # WHY: Gets your repo code onto runner machine
+      # ✅ Step 1 — Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
       # ✅ Step 2 — Setup Python
-      # WHY: Runner needs Python to run scan.py and clone_repos.py
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       # ✅ Step 3 — Install Python dependencies
-      # FIXED: Added requests ← was missing causing ModuleNotFoundError
-      # FIXED: Removed pyyaml ← not needed
-      # WHY: Fresh runner has NO packages installed
-      # WHY: requests needed by clone_repos.py for GitHub API calls
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests
 
       # ✅ Step 4 — Setup .NET
-      # WHY: Services use SharedKafka NuGet package
-      # WHY: dotnet restore needs .NET installed
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
       # ✅ Step 5 — Add GitHub NuGet Source
-      # WHY: SharedKafka is on GitHub Packages NOT nuget.org
-      # WHY: Runner machine does not know about GitHub Packages
-      # WHY: Must add source BEFORE dotnet restore runs
+      # FIXED: Added --store-password-in-clear-text
+      # WHY: GitHub Actions runs on Linux/Ubuntu
+      # WHY: Linux does not support password encryption
+      # WHY: --store-password-in-clear-text is the fix
+      # WHY: Safe because token is from GitHub Secrets
       - name: Add GitHub NuGet Source
         run: |
           dotnet nuget add source \
             "https://nuget.pkg.github.com/lokesh0507/index.json" \
             --name "github" \
             --username "lokesh0507" \
-            --password ${{ secrets.SCANNER_PAT }}
+            --password ${{ secrets.SCANNER_PAT }} \
+            --store-password-in-clear-text
 
       # ✅ Step 6 — Clone external iot repos
-      # FIXED: Changed GH_PAT → SCANNER_PAT
-      # WHY: clone_repos.py reads os.environ.get("SCANNER_PAT")
-      # WHY: Must match EXACTLY what clone_repos.py expects
       - name: Clone external repos
         run: python tools/deps-scanner/clone_repos.py
         env:
           SCANNER_PAT: ${{ secrets.SCANNER_PAT }}
 
       # ✅ Step 7 — Run dependency scanner
-      # WHY: Scans all services (local + cloned repos)
-      # WHY: Generates output/deps.md and output/deps.html
       - name: Run dependency scanner
         run: python tools/deps-scanner/scan.py
 
       # ✅ Step 8 — Commit and push dependency graph
-      # FIXED: Removed duplicate commit step
-      # FIXED: Added both deps.md AND deps.html
-      # WHY: Save generated graph back to repo
-      # WHY: Team can see latest graph without running locally
-      # WHY: || echo "No changes" → prevents failure if nothing changed
       - name: Commit and push dependency graph
         run: |
           git config user.name "github-actions"
@@ -95,9 +79,6 @@ jobs:
           git push
 
       # ✅ Step 9 — Upload as artifact
-      # WHY: Download graph from GitHub Actions UI
-      # WHY: Useful for pull_request runs
-      # WHY: where commit step might not push
       - name: Upload dependency graph
         uses: actions/upload-artifact@v4
         with:
