@@ -34,9 +34,10 @@ classDef repo_2_iot fill:#90E084,stroke:#333,color:#000
   service_a -->|GET /status| service_f
   service_c -->|GET /call-a| service_a
   service_c -->|POST /post-data| service_a
-  service_b -->|GET /monitoring| service_a
+  service_b -->|GET /call-a| service_a
+  service_b -->|GET /addressdetails| service_c
   Kafka_order_created_bd -->|"KAFKA_CONSUMER<br/>Events Consuming:<br/>• OrderCreatedEvent"| service_d
-  service_b -->|"KAFKA_PRODUCER<br/>Events Producing:<br/>• OrderCreatedEvent<br/>• PaymentInitiatedEvent"| Kafka_order_created_bd
+  Kafka_order_created_bd -->|"KAFKA_CONSUMER<br/>Events Consuming:<br/>• OrderCreatedEvent<br/>• PaymentInitiatedEvent"| service_b
   Kafka_topic_A -->|"KAFKA_CONSUMER<br/>Events Consuming:<br/>• TopicAEvent"| service_g
   service_f -->|"KAFKA_PRODUCER<br/>Events Producing:<br/>• TopicAEvent"| Kafka_topic_A
 
