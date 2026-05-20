@@ -50,14 +50,14 @@ jobs:
       # WHY: Linux does not support password encryption
       # WHY: --store-password-in-clear-text is the fix
       # WHY: Safe because token is from GitHub Secrets
-      - name: Add GitHub NuGet Source
-        run: |
-          dotnet nuget add source \
-            "https://nuget.pkg.github.com/lokesh0507/index.json" \
-            --name "github" \
-            --username "lokesh0507" \
-            --password ${{ secrets.SCANNER_PAT }} \
-            --store-password-in-clear-text
+      # - name: Add GitHub NuGet Source
+      #   run: |
+      #     dotnet nuget add source \
+      #       "https://nuget.pkg.github.com/lokesh0507/index.json" \
+      #       --name "github" \
+      #       --username "lokesh0507" \
+      #       --password ${{ secrets.SCANNER_PAT }} \
+      #       --store-password-in-clear-text
 
       # ✅ Step 6 — Clone external iot repos
       - name: Clone external repos
